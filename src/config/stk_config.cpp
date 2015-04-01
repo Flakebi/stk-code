@@ -125,6 +125,8 @@ void STKConfig::load(const std::string &filename)
     CHECK_NEG(m_parachute_max_speed,       "parachute-max-speed"        );
     CHECK_NEG(m_parachute_time,            "parachute-time"             );
     CHECK_NEG(m_parachute_time_other,      "parachute-time-other"       );
+    CHECK_NEG(m_invisibility_time,         "invisibility-time"          );
+    CHECK_NEG(m_invisibility_fading,       "invisibility-fade-time"     );
     CHECK_NEG(m_bomb_time,                 "bomb-time"                  );
     CHECK_NEG(m_bomb_time_increase,        "bomb-time-increase"         );
     CHECK_NEG(m_anvil_time,                "anvil-time"                 );
@@ -172,7 +174,8 @@ void STKConfig::init_defaults()
         m_near_ground            = m_item_switch_time          =
         m_smooth_angle_limit     = m_parachute_ubound_fraction =
         m_penalty_time           = m_explosion_impulse_objects =
-        m_parachute_max_speed    = UNDEFINED;
+        m_parachute_max_speed    = m_invisibility_time         =
+        m_invisibility_fading = UNDEFINED;
     m_bubblegum_counter          = -100;
     m_bubblegum_shield_time      = -100;
     m_shield_restrict_weapos     = false;
@@ -317,6 +320,12 @@ void STKConfig::getAllData(const XMLNode * root)
         parachute_node->get("lbound-fraction",  &m_parachute_lbound_fraction);
         parachute_node->get("ubound-fraction",  &m_parachute_ubound_fraction);
         parachute_node->get("max-speed",        &m_parachute_max_speed      );
+    }
+
+    if(const XMLNode *invisible_node= root->getNode("invisibility"))
+    {
+        invisible_node->get("time",      &m_invisibility_time  );
+        invisible_node->get("fade-time", &m_invisibility_fading);
     }
 
     if(const XMLNode *bomb_node= root->getNode("bomb"))

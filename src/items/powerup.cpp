@@ -113,6 +113,10 @@ void Powerup::set(PowerupManager::PowerupType type, int n)
             m_sound_use = SFXManager::get()->createSoundSource("parachute");
             break;
 
+        case PowerupManager::POWERUP_INVISIBILITY:
+            m_sound_use = SFXManager::get()->createSoundSource("swap");
+            break;
+
         case PowerupManager::POWERUP_BUBBLEGUM:
                 m_sound_use = SFXManager::get()->createSoundSource("goo");
             break ;
@@ -355,6 +359,14 @@ void Powerup::use()
             else if(player_kart)
                 m_sound_use->setPosition(player_kart->getXYZ());
             m_sound_use->play();
+        }
+        break;
+
+    case PowerupManager::POWERUP_INVISIBILITY:
+        {
+            m_owner->getAttachment()
+                ->set(Attachment::ATTACH_INVISIBILITY,
+                      stk_config->m_invisibility_time);
         }
         break;
 

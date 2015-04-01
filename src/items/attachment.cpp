@@ -60,13 +60,16 @@ Attachment::Attachment(AbstractKart* kart)
     // have to attach some kind of mesh, but make it invisible.
     m_node = irr_driver->addAnimatedMesh(
                          attachment_manager->getMesh(Attachment::ATTACH_BOMB), "bomb");
+    if (m_node)
+    {
 #ifdef DEBUG
-    std::string debug_name = kart->getIdent()+" (attachment)";
-    m_node->setName(debug_name.c_str());
+        std::string debug_name = kart->getIdent()+" (attachment)";
+        m_node->setName(debug_name.c_str());
 #endif
-    m_node->setAnimationEndCallback(this);
-    m_node->setParent(m_kart->getNode());
-    m_node->setVisible(false);
+        m_node->setAnimationEndCallback(this);
+        m_node->setParent(m_kart->getNode());
+        m_node->setVisible(false);
+    }
 }   // Attachment
 
 //-----------------------------------------------------------------------------
@@ -145,23 +148,35 @@ void Attachment::set(AttachmentType type, float time,
         m_bomb_sound->setPosition(m_kart->getXYZ());
         m_bomb_sound->play();
         break;
+    case ATTACH_INVISIBILITY:
+        // Make the kart invisible
+        m_kart_previous_visibility = m_kart->getNode()->isVisible();
+        m_kart->getNode()->setVisible(false);
+        break;
     default:
         m_node->setMesh(attachment_manager->getMesh(type));
         break;
     }   // switch(type)
 
-    if (!UserConfigParams::m_graphical_effects)
-    {
-        m_node->setAnimationSpeed(0);
-        m_node->setCurrentFrame(0);
-    }
-
-    m_node->setScale(core::vector3df(m_node_scale,m_node_scale,m_node_scale));
-
     m_type             = type;
     m_time_left        = time;
     m_previous_owner   = current_kart;
-    m_node->setRotation(core::vector3df(0, 0, 0));
+
+    if (m_node)
+    {
+        if (!UserConfigParams::m_graphical_effects)
+        {
+            m_node->setAnimationSpeed(0);
+            m_node->setCurrentFrame(0);
+        }
+
+        m_node->setScale(core::vector3df(m_node_scale,m_node_scale,m_node_scale));
+        m_node->setRotation(core::vector3df(0, 0, 0));
+
+        m_node->setVisible(true);
+
+        irr_driver->applyObjectPassShader(m_node);
+    }
 
     // A parachute can be attached as result of the usage of an item. In this
     // case we have to save the current kart speed so that it can be detached
@@ -178,9 +193,6 @@ void Attachment::set(AttachmentType type, float time,
             m_node->setAnimationSpeed(50);
         }
     }
-    m_node->setVisible(true);
-
-    irr_driver->applyObjectPassShader(m_node);
 }   // set
 
 // -----------------------------------------------------------------------------
@@ -202,12 +214,19 @@ void Attachment::clear()
         m_bomb_sound = NULL;
     }
 
+    // Restore kart visibility
+    if (m_type == ATTACH_INVISIBILITY)
+        m_kart->getNode()->setVisible(m_kart_previous_visibility);
+
     m_type=ATTACH_NOTHING;
 
     m_time_left=0.0;
-    m_node->setVisible(false);
-    m_node->setPosition(core::vector3df());
-    m_node->setRotation(core::vector3df());
+    if (m_node)
+    {
+        m_node->setVisible(false);
+        m_node->setPosition(core::vector3df());
+        m_node->setRotation(core::vector3df());
+    }
 
     // Resets the weight of the kart if the previous attachment affected it
     // (e.g. anvil). This must be done *after* setting m_type to
@@ -467,6 +486,13 @@ void Attachment::update(float dt)
         break;
     case ATTACH_TINYTUX:
         // Nothing to do for tinytux, this is all handled in EmergencyAnimation
+        break;
+    case ATTACH_INVISIBILITY:
+        //TODO
+        if (m_time_left < 0)
+        {
+            m_time_left = 0.0f;
+        }
         break;
     case ATTACH_BUBBLEGUM_SHIELD:
     case ATTACH_NOLOK_BUBBLEGUM_SHIELD:

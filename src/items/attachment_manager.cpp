@@ -53,8 +53,9 @@ static const initAttachmentType iat[]=
     {Attachment::ATTACH_SWATTER,          "swatter.b3d",          "swatter-icon.png"             },
     {Attachment::ATTACH_NOLOKS_SWATTER,   "swatter_nolok.b3d",    "swatter-icon.png"             },
     {Attachment::ATTACH_TINYTUX,          "reset-button.b3d",     "reset-attach-icon.png"        },
+    {Attachment::ATTACH_INVISIBILITY,     "",                     "reset-attach-icon.png"        },
     {Attachment::ATTACH_BUBBLEGUM_SHIELD, "bubblegum_shield.b3d", "shield-icon.png"              },
-    {Attachment::ATTACH_NOLOK_BUBBLEGUM_SHIELD, "bubblegum_shield_nolok.b3d", "shield-icon.png"              },
+    {Attachment::ATTACH_NOLOK_BUBBLEGUM_SHIELD, "bubblegum_shield_nolok.b3d", "shield-icon.png"  },
     {Attachment::ATTACH_MAX,              "",                     ""                             },
 };
 
@@ -64,14 +65,17 @@ AttachmentManager::~AttachmentManager()
     for(int i=0; iat[i].attachment!=Attachment::ATTACH_MAX; i++)
     {
         scene::IMesh *mesh = m_attachments[iat[i].attachment];
-        mesh->drop();
-        // If the count is 1, the only reference is in the
-        // irrlicht mesh cache, so the mesh can be removed
-        // from the cache.
-        // Note that this test is necessary, since some meshes
-        // are also used in powerup_manager!!!
-        if(mesh->getReferenceCount()==1)
-            irr_driver->removeMeshFromCache(mesh);
+        if (mesh)
+        {
+            mesh->drop();
+            // If the count is 1, the only reference is in the
+            // irrlicht mesh cache, so the mesh can be removed
+            // from the cache.
+            // Note that this test is necessary, since some meshes
+            // are also used in powerup_manager!!!
+            if(mesh->getReferenceCount()==1)
+                irr_driver->removeMeshFromCache(mesh);
+        }
     }
 }   // ~AttachmentManager
 
@@ -89,9 +93,18 @@ void AttachmentManager::loadModels()
 {
     for(int i=0; iat[i].attachment!=Attachment::ATTACH_MAX; i++)
     {
-        std::string full_path = file_manager->getAsset(FileManager::MODEL,iat[i].file);
-        m_attachments[iat[i].attachment]=irr_driver->getAnimatedMesh(full_path);
-        m_attachments[iat[i].attachment]->grab();
+        // Invisibility has no model
+        if(iat[i].attachment == Attachment::ATTACH_INVISIBILITY)
+        {
+            m_attachments[iat[i].attachment] = nullptr;
+        }
+        else
+        {
+            std::string full_path = file_manager->getAsset(FileManager::MODEL,iat[i].file);
+            m_attachments[iat[i].attachment]=irr_driver->getAnimatedMesh(full_path);
+            m_attachments[iat[i].attachment]->grab();
+        }
+
         if(iat[i].icon_file)
         {
             std::string full_icon_path     =

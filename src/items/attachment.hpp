@@ -59,6 +59,7 @@ public:
         ATTACH_SWATTER,
         ATTACH_NOLOKS_SWATTER,
         ATTACH_TINYTUX,
+        ATTACH_INVISIBILITY,
         ATTACH_BUBBLEGUM_SHIELD,
         ATTACH_NOLOK_BUBBLEGUM_SHIELD,
         ATTACH_MAX,
@@ -77,6 +78,9 @@ private:
 
     /** For parachutes only. */
     float           m_initial_speed;
+
+    /** If the kart was invisible before the invisibility attachment came. */
+    bool            m_kart_previous_visibility;
 
     /** For zoom-in animation */
     float           m_node_scale;

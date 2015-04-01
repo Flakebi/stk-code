@@ -78,6 +78,9 @@ public:
     float m_parachute_time;            /**<Time a parachute is active.         */
     float m_parachute_time_other;      /**<Time a parachute attached to other
                                            karts is active.                    */
+    float m_invisibility_fading;       /**<Time the invisibility effect needs
+                                           to fade in. */
+    float m_invisibility_time;         /**<Time the invisibility is active.    */
     float m_bomb_time;                 /**<Time before a bomb explodes.        */
     float m_bomb_time_increase;        /**<Time added to bomb timer when it's
                                            passed on.                          */

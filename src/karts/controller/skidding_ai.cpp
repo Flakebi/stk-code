@@ -1407,6 +1407,18 @@ void SkiddingAI::handleItems(const float dt)
                     m_controls->m_fire = true;
             break;
         }
+    case PowerupManager::POWERUP_INVISIBILITY:
+        {
+            // Don't use it if no kart is near us
+            float d2 = 50;
+            if ((m_kart_ahead &&
+                 (m_kart_ahead->getXYZ() - m_kart->getXYZ()).length2() < d2 &&
+                  m_kart_ahead->getSpeed() < m_kart->getSpeed()) ||
+                (m_kart_behind &&
+                 (m_kart_behind->getXYZ() - m_kart->getXYZ()).length2() < d2))
+                m_controls->m_fire = m_kart_ahead != NULL;
+            break;
+        }
     case PowerupManager::POWERUP_RUBBERBALL:
         // if the kart has a shield, do not break it by using a swatter.
         if(m_kart->getShieldTime() > min_bubble_time)

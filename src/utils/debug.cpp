@@ -81,6 +81,7 @@ enum DebugMenuCommand
     DEBUG_POWERUP_BUBBLEGUM,
     DEBUG_POWERUP_CAKE,
     DEBUG_POWERUP_PARACHUTE,
+    DEBUG_POWERUP_INVISIBILITY,
     DEBUG_POWERUP_PLUNGER,
     DEBUG_POWERUP_RUBBERBALL,
     DEBUG_POWERUP_SWATTER,
@@ -230,6 +231,7 @@ bool onEvent(const SEvent &event)
             sub->addItem(L"Bubblegum", DEBUG_POWERUP_BUBBLEGUM );
             sub->addItem(L"Cake", DEBUG_POWERUP_CAKE );
             sub->addItem(L"Parachute", DEBUG_POWERUP_PARACHUTE );
+            sub->addItem(L"Invisibility", DEBUG_POWERUP_INVISIBILITY );
             sub->addItem(L"Plunger", DEBUG_POWERUP_PLUNGER );
             sub->addItem(L"Swatter", DEBUG_POWERUP_SWATTER );
             sub->addItem(L"Switch", DEBUG_POWERUP_SWITCH );
@@ -446,6 +448,10 @@ bool onEvent(const SEvent &event)
                 else if (cmdID == DEBUG_POWERUP_PARACHUTE)
                 {
                     addPowerup(PowerupManager::POWERUP_PARACHUTE);
+                }
+                else if (cmdID == DEBUG_POWERUP_INVISIBILITY)
+                {
+                    addPowerup(PowerupManager::POWERUP_INVISIBILITY);
                 }
                 else if (cmdID == DEBUG_POWERUP_PLUNGER)
                 {

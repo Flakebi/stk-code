@@ -52,7 +52,7 @@ class XMLNode;
  *  position  1     2   3      4      5      6
  *  class     first top middle middle bottom last
  *  For each class the weight distribution is read in from powerup.xml:
- *   <!--      bubble cake bowl zipper plunger switch para anvil -->
+ *   <!--      bubble cake bowl zipper plunger switch para anvil invisibility -->
  *   <last  w="0      1    1    2      2       0      2    2"     />
  *  So a (well, in this case 'the') player belonging to the class 'last'
  *  will not get a bubble gum or switch. Cakes and bowling balls have
@@ -65,7 +65,7 @@ class XMLNode;
  *  just pick a random item from this list to get the right distribution.
  *  In the example above the list for 'last' will be:
  *  [cake, bowling,zipper,zipper,plunger,plunger,parachute,parachute,
- *   anvil,anvil.
+ *   anvil,anvil].
  */
 
 class PowerupManager : public NoCopy
@@ -79,7 +79,7 @@ public:
                       POWERUP_CAKE,
                       POWERUP_BOWLING, POWERUP_ZIPPER, POWERUP_PLUNGER,
                       POWERUP_SWITCH, POWERUP_SWATTER, POWERUP_RUBBERBALL,
-                      POWERUP_PARACHUTE,
+                      POWERUP_PARACHUTE, POWERUP_INVISIBILITY,
                       POWERUP_ANVIL,      //powerup.cpp assumes these two come last
                       POWERUP_LAST=POWERUP_ANVIL,
                       POWERUP_MAX

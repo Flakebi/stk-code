@@ -103,6 +103,8 @@
   <parachute friction="2.0" time="4.0" time-other="8.0"
              lbound-fraction="0.95" ubound-fraction="0.7" max-speed="23"/>
 
+  <invisibility time="5" fade-time="1" />
+
   <!-- time is the time till a bomb explodes. time-increase is the time added
        to timer when bomb is passed on. -->
   <bomb time="30.0" time-increase="-5.0"/>
