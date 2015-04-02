@@ -1409,6 +1409,10 @@ void SkiddingAI::handleItems(const float dt)
         }
     case PowerupManager::POWERUP_INVISIBILITY:
         {
+            // Don't use it if the kart is already invisible
+            if (m_kart->getAttachment()->getType() == Attachment::ATTACH_INVISIBILITY)
+                break;
+
             // Don't use it if no kart is near us
             float d2 = 50;
             if ((m_kart_ahead &&
