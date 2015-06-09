@@ -222,6 +222,8 @@ void  Powerup::adjustSound()
  */
 void Powerup::use()
 {
+    RaceGUIBase *gui = World::getWorld()->getRaceGUI();
+
     // The player gets an achievement point for using a powerup
     StateManager::ActivePlayer * player = m_owner->getController()->getPlayer();
     if (m_type != PowerupManager::POWERUP_NOTHING &&
